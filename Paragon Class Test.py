@@ -6,7 +6,7 @@ from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
 
 class ParagonPointsClassifier():
 
@@ -67,9 +67,9 @@ class ParagonPointsClassifier():
 
 X = np.loadtxt('titanic-train.csv',delimiter=',')
 
-# Pull out the labels from the dataset as y, then remove them from the main dataset as X
+# Pull out the labels from the dataset as y, then remove them from the main dataset as X and drop the ID column
 y = X[:,-1]
-X = X[:, 0:-1]
+X = X[:, 1:-1]
 
 # Create a training and test set with labels by randomly splitting the samples
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=7)
@@ -87,6 +87,7 @@ X_train = pca.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 X_test = pca.transform(X_test)
 print(pca.explained_variance_ratio_)
+
 # Call the Paragon Points Classifier and fit it to the training dataset
 model = ParagonPointsClassifier()
 model.fit(X_train,y_train)
@@ -105,10 +106,15 @@ print('')
 print('Support Vector Classifier (Radial Kernel) Performance:')
 print('')
 
-# Compare the results of the ParagonPoints model to an out-of-the-box Support Vector Machine
-# (or a KNN model if the mood strikes)
-model = SVC()
-# model = KNeighborsClassifier(n_neighbors=4)
+# Compare the results of the ParagonPoints model to a cross validation optimized Support Vector Machine
+
+kf = StratifiedKFold(n_splits=10, random_state=None, shuffle=True)
+svc_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
+                     'C': [1, 10, 100, 1000]},
+                    {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+
+svc = SVC(class_weight='balanced')
+model = GridSearchCV(svc, svc_parameters,cv=kf, scoring='accuracy', verbose=True)
 model.fit(X_train,y_train)
 svc_predictions = model.predict(X_test)
 
