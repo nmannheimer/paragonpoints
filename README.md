@@ -1,2 +1,8 @@
-# paragonpoints
-A novel two-class classification algorithm implemented in python.
+## paragonpoints
+# A novel two-class classification algorithm implemented in python.
+
+The Paragon Points algorithm is a novel two-class classification algorithm that offers comparable performance to an un-optimized Support Vector Machine on classification problems with two distinct classes. The training step of the model defines a sample in each n-dimensional class that most differentiates that class from the opposite class. This point is defined by iterating through each sample in a given class and calculating the sum of the euclidian distances between that point and all points in the opposing class. Once the most differentiated point, the "Paragon Point", in each class is defined, classification is performed for any new samples by simply calculating the euclidian distance between that sample and the paragon points for each class. A sample is classified as belongning to the class with the paragon point nearest to that sample.
+
+Though the model uses distance to calculate class like a nearest Nearest Neighbors, the performance characteristics are reversed. While a KNN model is trained almost instantly by simply loading a matrix of the training data into the model, the majority of the work in the Paragon Points model occurs at training time, as the paragon points are calculated from the training data. Classification in a KNN model can become time consuming for large or high-dimensional data, since distances between a test sample must be calculated for all training points. Conversely, for the Paragon Points model, classification is extremely efficient, since each test sample is only compared to two samples: the paragons for each class.
+
+In future, it would be interesting to expand the model to classify with N Paragon Points instead of a single point to increase flexibility. It would also be useful to expand the model to be able to handle multi-class classifications with a one vs many approach.
