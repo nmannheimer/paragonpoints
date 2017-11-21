@@ -1,4 +1,4 @@
-# paragonpoints
+# Paragon Points Classifier
 ## A novel two-class classification algorithm implemented in python.
 
 The Paragon Points algorithm is a novel two-class classification algorithm that offers comparable performance to an un-optimized Support Vector Machine on classification problems with two distinct classes. The training step of the model defines a sample in each n-dimensional class that most differentiates that class from the opposite class. This point is defined by iterating through each sample in a given class and calculating the sum of the euclidian distances between that point and all points in the opposing class. Once the most differentiated point, the "Paragon Point", in each class is defined, classification is performed for any new samples by simply calculating the euclidian distance between that sample and the paragon points for each class. A sample is classified as belongning to the class with the paragon point nearest to that sample.
